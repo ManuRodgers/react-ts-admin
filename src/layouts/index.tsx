@@ -1,13 +1,9 @@
-import React from 'react';
-import styles from './index.css';
+import * as React from 'react';
 
-const BasicLayout: React.FC = props => {
-  return (
-    <div className={styles.normal}>
-      <h1 className={styles.title}>Yay! Welcome to umi!</h1>
-      {props.children}
-    </div>
-  );
+interface IBasicLayoutProps {}
+
+const BasicLayout: React.FunctionComponent<IBasicLayoutProps> = ({ children }) => {
+  return <div>{children}</div>;
 };
 
 export default BasicLayout;
