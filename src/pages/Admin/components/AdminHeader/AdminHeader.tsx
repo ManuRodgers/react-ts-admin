@@ -1,13 +1,15 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Redirect, withRouter } from 'umi';
+import { Redirect, router, withRouter } from 'umi';
 import dayjs from 'dayjs';
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
 
 import Logo from '@/assets/images/logo.png';
 import { menuList, MenuList } from '@/config/menuList.config';
 import memoryUtils from '@/utils/memoryUtils';
 import { IUmiComponent, IUser } from '@/interfaces';
 import './AdminHeader.less';
+import LinkButton from '@/components/LinkButton/LinkButton';
+import storageUtils from '@/utils/storageUtils';
 
 const { Header } = Layout;
 
@@ -33,12 +35,10 @@ const AdminHeader: React.FunctionComponent<IAdminHeaderProps> = ({ location }) =
     menuList.forEach(menu => {
       if (menu.key === pathname) {
         setTitle(menu.title);
-        console.log(`title`, title);
       } else if (menu.children) {
         const cMenu = menu.children.find(cMenu => cMenu.key === pathname);
         if (cMenu) {
           setTitle(cMenu.title);
-          console.log(`title`, title);
         }
       }
     });
@@ -48,11 +48,26 @@ const AdminHeader: React.FunctionComponent<IAdminHeaderProps> = ({ location }) =
   if (!currentUser || !currentUser._id) {
     return <Redirect to={`/login`} />;
   }
+
+  const handleLogOutClicked: React.MouseEventHandler<HTMLButtonElement> = () => {
+    Modal.confirm({
+      title: 'Do you Want to log out?',
+      onOk() {
+        memoryUtils.user = {};
+        storageUtils.removeUser();
+        router.replace(`/login`);
+        console.log('OK');
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
   return (
     <Header className={'admin-header'}>
       <div className={`admin-header-top`}>
         <span>welcome, {currentUser.username}</span>
-        <a href="javascript:">Log out</a>
+        <LinkButton onClick={handleLogOutClicked}>Log out</LinkButton>
       </div>
       <div className={`admin-header-bottom`}>
         <div className="admin-header-bottom-left">{title}</div>
