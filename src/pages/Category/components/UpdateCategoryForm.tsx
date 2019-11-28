@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input } from 'antd';
 import { FormComponentProps } from 'antd/es/form';
+import { ICategory } from '@/interfaces';
 
 interface IUpdateCategoryFormProps extends FormComponentProps {
-  categoryName: string;
+  currentCategory: ICategory;
+  getUpdateForm: (form: any) => void;
 }
 
 const UpdateCategoryForm: React.FunctionComponent<IUpdateCategoryFormProps> = ({
   form,
-  categoryName,
+  currentCategory,
+  getUpdateForm,
 }) => {
   const { getFieldDecorator } = form;
+  useEffect(() => {
+    getUpdateForm(form);
+  }, []);
+  const { name } = currentCategory;
   return (
     <Form className={`update-category-form`}>
       <Form.Item>
         {getFieldDecorator('categoryName', {
-          initialValue: categoryName,
+          initialValue: name,
+          rules: [
+            {
+              required: true,
+              message: 'categoryName is required',
+            },
+          ],
         })(<Input placeholder={`Please enter category name`} />)}
       </Form.Item>
     </Form>
