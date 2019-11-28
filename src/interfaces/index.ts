@@ -13,6 +13,7 @@ export interface ICategoryModel {
   categories: ICategory[];
   subCategories: ICategory[];
   currentCategory: ICategory;
+  parentId: string;
 }
 
 export interface IUser {
