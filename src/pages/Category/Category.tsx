@@ -32,10 +32,6 @@ interface ICategoryProps extends IUmiComponent, CategoryStateProps {}
 
 const Category: React.FunctionComponent<ICategoryProps> = ({ category, dispatch }) => {
   const { categories, subCategories, currentCategory, parentId } = category;
-  console.log(`currentCategory`, currentCategory);
-  console.log(`subCategories`, subCategories);
-  console.log(`categories`, categories);
-  console.log(`parentId`, parentId);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [addForm, setAddForm] = useState();
   const [updateForm, setUpdateForm] = useState();

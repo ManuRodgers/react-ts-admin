@@ -14,7 +14,22 @@ const config: IConfig = {
             { path: '/admin', redirect: '/admin/home' },
             { path: '/admin/home', component: '../pages/Home/Home' },
             { path: '/admin/category', component: '../pages/Category/Category' },
-            { path: '/admin/product', component: '../pages/Product/Product' },
+            {
+              path: '/admin/product',
+              component: '../pages/ProductHome/ProductHome',
+            },
+            {
+              path: '/admin/product/detail',
+              component: '../pages/ProductDetail/ProductDetail',
+            },
+            {
+              path: '/admin/product/addupdate',
+              component: '../pages/ProductAddUpdate/ProductAddUpdate',
+            },
+            {
+              path: '/admin/product/*',
+              redirect: '/admin/product',
+            },
             { path: '/admin/role', component: '../pages/Role/Role' },
             { path: '/admin/user', component: '../pages/User/User' },
             { path: '/admin/charts/bar', component: '../pages/Charts/Bar' },
@@ -23,7 +38,7 @@ const config: IConfig = {
           ],
         },
         { path: '/login', component: '../pages/Login/Login' },
-        { path: '/', redirect: '/admin' },
+        { path: '*', redirect: '/admin' },
       ],
     },
   ],
@@ -59,6 +74,7 @@ const config: IConfig = {
       pathRewrite: { '^/api': '' },
     },
   },
+  disableRedirectHoist: true,
 };
 
 export default config;
