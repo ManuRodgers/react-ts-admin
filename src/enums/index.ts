@@ -67,3 +67,8 @@ export enum HttpStatusCode {
   NOT_EXTENDED = 510,
   NETWORK_AUTHENTICATION_REQUIRED = 511,
 }
+
+export enum ProductStatus {
+  FOR_SALE = 1,
+  SOLD_OUT = 2,
+}

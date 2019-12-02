@@ -4,7 +4,6 @@ import { HTTPMethod } from 'http-method-enum';
 
 import { LoginDto } from '@/dto/login.dto';
 import { AddUserDto } from '@/dto/add-user.dto';
-import { GetCategoriesDto } from '@/dto/get-categories.dto';
 import { AddCategoryDto } from '@/dto/add-category.dto';
 import { UpdateCategoryDto } from '@/dto/update-category.dto';
 import { DeleteCategoryDto } from '@/dto/delete-category.dto';
