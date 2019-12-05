@@ -6,9 +6,11 @@ import { ColumnProps } from 'antd/es/table';
 import { IGlobalState, IProduct, IUmiComponent } from '@/interfaces';
 import './ProductHome.less';
 import LinkButton from '@/components/LinkButton/LinkButton';
-import { useProducts } from '@/hooks';
+import { useCategories, useProducts } from '@/hooks';
 import { PAGE_SIZE } from '@/utils/constant';
 import { router } from 'umi';
+import { setCategories } from '@/actions/categoryActions';
+import { setProducts } from '@/actions/productActions';
 const mapStateToProps = ({ product }: IGlobalState) => ({
   product,
 });
@@ -27,6 +29,16 @@ const ProductHome: React.FunctionComponent<IProductHomeProps> = ({
   const [pageNum, setPageNum] = useState<number>(1);
   const { products } = product;
 
+  // get top categories from server or cache
+  const { data: categoriesData, error: categoryError } = useCategories('0');
+  useEffect(() => {
+    if (categoryError) {
+      message.error(categoryError.message);
+    } else if (categoriesData && categoriesData.status === 0) {
+      dispatch(setCategories({ categories: categoriesData.data }));
+    }
+  }, [categoryError, categoriesData, dispatch]);
+
   // get products from server or cache
   const { data: productsData, isValidating: loading, error } = useProducts(pageNum, PAGE_SIZE);
   useEffect(() => {
@@ -36,10 +48,12 @@ const ProductHome: React.FunctionComponent<IProductHomeProps> = ({
     } else if (productsData && productsData.status === 0) {
       setIsLoading(loading);
       console.log(`productsData`, productsData.data);
-      const { total, list } = productsData.data;
+      const { total, list: products, pageNum } = productsData.data;
+      dispatch(setProducts({ products }));
       setTotal(total);
+      setPageNum(pageNum);
     }
-  }, [error, productsData, loading]);
+  }, [error, productsData, loading, dispatch]);
 
   const columns: ColumnProps<IProduct>[] = [
     {

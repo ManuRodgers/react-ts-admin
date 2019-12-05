@@ -72,3 +72,7 @@ export enum ProductStatus {
   FOR_SALE = 1,
   SOLD_OUT = 2,
 }
+export enum SearchTypes {
+  PRODUCT_NAME = 'productName',
+  PRODUCT_DESC = 'productDesc',
+}
