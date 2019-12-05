@@ -1,7 +1,6 @@
 import { Dispatch } from 'dva';
 import { RouterTypes } from 'umi';
 import { ProductStatus } from '@/enums';
-import React from 'react';
 
 export interface IUmiComponent extends RouterTypes<{}, { id: string }> {
   dispatch: Dispatch;
@@ -46,8 +45,8 @@ export interface IProduct {
   price?: number;
   desc?: string;
   status?: ProductStatus.FOR_SALE;
-  imgs?: JSON[];
-  detail?: string;
+  imgs: string[];
+  detail: string;
   _id?: string;
   __v?: number;
 }
