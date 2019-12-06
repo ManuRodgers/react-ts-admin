@@ -76,3 +76,8 @@ export enum SearchTypes {
   PRODUCT_NAME = 'productName',
   PRODUCT_DESC = 'productDesc',
 }
+export enum Roles {
+  ADMIN = 'admin',
+  TESTER = 'tester',
+  MANAGER = 'manager',
+}

@@ -11,7 +11,11 @@ const { SubMenu } = Menu;
 interface ILeftNavProps extends IUmiComponent {}
 
 const LeftNav: React.FunctionComponent<ILeftNavProps> = ({ location, dispatch }) => {
-  const { pathname } = location;
+  let pathname = location.pathname;
+  console.log(`pathname`, pathname);
+  if (pathname.startsWith(`/admin/product`)) {
+    pathname = `/admin/product`;
+  }
   // submenu keys of first level
   const rootSubmenuKeys = menuList
     .filter(menu => menu.children)

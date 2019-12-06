@@ -11,6 +11,7 @@ import { DeleteImgDto } from '@/dto/delete-img.dto';
 import { AddProductDto } from '@/dto/add-product.dto';
 import { UpdateProductDto } from '@/dto/update-product.dto';
 import { DeleteProductDto } from '@/dto/delete-product.dto';
+import { UpdateProductStatusDto } from '@/dto/update-product-status.dto';
 
 const BASE = '';
 
@@ -55,6 +56,11 @@ export const updateProduct = (updateProductDto: UpdateProductDto) =>
   request(BASE + '/api/manage/product/update', {
     method: HTTPMethod.PUT,
     data: updateProductDto,
+  });
+export const updateProductStatus = (updateProductStatusDto: UpdateProductStatusDto) =>
+  request(BASE + '/api/manage/product/updateStatus', {
+    method: HTTPMethod.PUT,
+    data: updateProductStatusDto,
   });
 
 export const deleteProduct = (deleteProductDto: DeleteProductDto) =>

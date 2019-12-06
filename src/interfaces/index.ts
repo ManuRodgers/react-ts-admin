@@ -9,6 +9,7 @@ export interface IUmiComponent extends RouterTypes<{}, { id: string }> {
 export interface IGlobalState {
   category: ICategoryModel;
   product: IProductModel;
+  role: IRoleModel;
 }
 
 export interface ICategoryModel {
@@ -21,6 +22,10 @@ export interface ICategoryModel {
 export interface IProductModel {
   products: IProduct[];
   currentProduct: IProduct;
+}
+export interface IRoleModel {
+  roles: IRole[];
+  currentRole?: IRole;
 }
 
 export interface IUser {
@@ -44,9 +49,18 @@ export interface IProduct {
   name?: string;
   price?: number;
   desc?: string;
-  status?: ProductStatus.FOR_SALE;
+  status: number;
   imgs: string[];
   detail: string;
+  _id?: string;
+  __v?: number;
+}
+export interface IRole {
+  name: string;
+  auth_name: string;
+  auth_time: number;
+  create_time: number;
+  menus: string[];
   _id?: string;
   __v?: number;
 }

@@ -10,8 +10,8 @@ import { useCategories, useProducts, useSearchProducts } from '@/hooks';
 import { PAGE_SIZE } from '@/utils/constant';
 import { router } from 'umi';
 import { setCategories } from '@/actions/categoryActions';
-import { setProducts } from '@/actions/productActions';
-import { SearchTypes } from '@/enums';
+import { setProducts, updateProductStatusAsync } from '@/actions/productActions';
+import { ProductStatus, SearchTypes } from '@/enums';
 const mapStateToProps = ({ product }: IGlobalState) => ({
   product,
 });
@@ -100,11 +100,26 @@ const ProductHome: React.FunctionComponent<IProductHomeProps> = ({
       title: 'Status',
       width: 100,
       dataIndex: 'status',
-      render: status => {
+      render: (text, record) => {
         return (
           <span>
-            <Button type={'primary'}>Sold Out</Button>
-            <span>For Sale</span>
+            <Button
+              onClick={() => {
+                console.log(`sold out clicked`, record);
+                const productId = record._id as string;
+                const status =
+                  record.status === ProductStatus.FOR_SALE
+                    ? ProductStatus.SOLD_OUT
+                    : ProductStatus.FOR_SALE;
+                dispatch(
+                  updateProductStatusAsync({ updateProductStatusDto: { productId, status } }),
+                );
+              }}
+              type={'primary'}
+            >
+              {record.status === 2 ? 'For Sale' : 'Sold Out'}
+            </Button>
+            <span>{record.status === 2 ? 'Sold Out' : 'For Sale'}</span>
           </span>
         );
       },
@@ -117,7 +132,7 @@ const ProductHome: React.FunctionComponent<IProductHomeProps> = ({
           <span>
             <LinkButton
               onClick={() => {
-                console.log(`Detail clicked`);
+                history.push('/admin/product/detail', record);
               }}
             >
               Detail

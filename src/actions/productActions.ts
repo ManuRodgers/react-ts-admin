@@ -3,6 +3,7 @@ import { IProduct } from '@/interfaces';
 import { AddProductDto } from '@/dto/add-product.dto';
 import { UpdateProductDto } from '@/dto/update-product.dto';
 import { DeleteProductDto } from '@/dto/delete-product.dto';
+import {UpdateProductStatusDto} from "@/dto/update-product-status.dto";
 
 const productActionCreator = actionCreatorFactory('product');
 
@@ -24,6 +25,14 @@ export const updateProductAsync = productActionCreator<{ updateProductDto: Updat
 export const updateProductSync = productActionCreator<{
   updateProductDto: UpdateProductDto;
 }>('updateProductSync');
+
+//  update product status
+export const updateProductStatusAsync = productActionCreator<{ updateProductStatusDto: UpdateProductStatusDto }>(
+  'updateProductStatusAsync',
+);
+export const updateProductStatusSync = productActionCreator<{
+  updateProductStatusDto: UpdateProductStatusDto;
+}>('updateProductStatusSync');
 
 // delete product
 export const deleteProductAsync = productActionCreator<{ deleteProductDto: DeleteProductDto }>(
