@@ -47,6 +47,19 @@ export const useCategories = (
     { revalidateOnFocus: false },
   );
 };
+export const useCategory = (
+  categoryId: string,
+): responseInterface<{ status: number; data: ICategory }, Error> => {
+  const params = useMemo(() => ({ categoryId }), [categoryId]);
+  return useRequest(
+    [() => `/api/manage/category/info`, params],
+    {
+      method: HTTPMethod.GET,
+      params,
+    },
+    { revalidateOnFocus: false },
+  );
+};
 export const useProducts = (
   pageNum: number,
   pageSize: number,

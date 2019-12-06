@@ -6,12 +6,14 @@ import {
   addProductSync,
   updateProductAsync,
   updateProductSync,
+  updateProductStatusAsync,
+  updateProductStatusSync,
   deleteProductAsync,
   deleteProductSync,
 } from '@/actions/productActions';
 import { IGlobalState } from '@/interfaces';
 import { ProductStatus } from '@/enums';
-import { addProduct, updateProduct } from '@/api';
+import { addProduct, updateProduct, updateProductStatus } from '@/api';
 import { message } from 'antd';
 import { router } from 'umi';
 
@@ -20,8 +22,10 @@ const initState: IGlobalState['product'] = {
   currentProduct: {
     imgs: [],
     detail: '',
+    status: ProductStatus.FOR_SALE,
   },
 };
+// @ts-ignore
 const productBuilder = new DvaModelBuilder(initState, 'product')
   .case(setProducts, (state, { products }) => ({ ...state, products }))
   .case(addProductSync, (state, { newProduct }) => ({
@@ -33,6 +37,15 @@ const productBuilder = new DvaModelBuilder(initState, 'product')
     products: state.products.map(product => {
       if (product._id === updateProductDto._id) {
         return { ...product, ...updateProductDto };
+      }
+      return product;
+    }),
+  }))
+  .case(updateProductStatusSync, (state, { updateProductStatusDto }) => ({
+    ...state,
+    products: state.products.map(product => {
+      if (product._id === updateProductStatusDto.productId) {
+        return { ...product, status: updateProductStatusDto.status };
       }
       return product;
     }),
@@ -61,31 +74,18 @@ const productBuilder = new DvaModelBuilder(initState, 'product')
     } else {
       return yield message.error(res.msg);
     }
+  })
+  .takeEvery(updateProductStatusAsync, function*({ updateProductStatusDto }, { select, put }) {
+    console.log(`updateProductDto`, updateProductStatusDto);
+    const res = yield updateProductStatus(updateProductStatusDto);
+    yield console.log(`res`, res);
+    if (res.status === 0) {
+      message.success(`Update product status successfully`);
+      router.push(`/admin/product`);
+      return yield put(updateProductStatusSync({ updateProductStatusDto }));
+    } else {
+      return yield message.error(res.msg);
+    }
   });
 
 export default productBuilder.build();
-
-// {
-//   status: ProductStatus.FOR_SALE,
-//     imgs: [`image-1575405475318.jpg`],
-//   _id: '1',
-//   name: 'Manu',
-//   desc: 'Manu Rodgers is the greatest of all time',
-//   price: 2000,
-//   pCategoryId: '5ddca2797fa0442cb4f99922',
-//   categoryId: '5de03df7a76c8dfde755433e',
-//   detail: '<p>hello manu <strong>goat</strong></p>',
-//   __v: 0,
-// },
-// {
-//   status: ProductStatus.FOR_SALE,
-//     imgs: [`image-1575405475318.jpg`],
-//   _id: '2',
-//   name: 'Timmy',
-//   desc: 'Timmy Duncan is the greatest of all time',
-//   price: 2100,
-//   pCategoryId: '5ddca2797fa0442cb4f99922',
-//   categoryId: '5de043cda76c8dfde7554340',
-//   detail: '<p>hello timmy</p>',
-//   __v: 0,
-// },
