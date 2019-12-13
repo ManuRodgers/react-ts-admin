@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import request, { RequestOptionsInit } from 'umi-request';
 import useSWR, { ConfigInterface, keyInterface, responseInterface } from 'swr';
-import { ICategory, IProduct } from '@/interfaces';
+import {ICategory, IProduct, IRole} from '@/interfaces';
 import { HTTPMethod } from 'http-method-enum';
 import { SearchTypes } from '@/enums';
 export const usePrevious = <T extends {}>(value: T) => {
@@ -80,6 +80,7 @@ export const useProducts = (
     { revalidateOnFocus: false },
   );
 };
+
 export const useSearchProducts = (
   pageNum: number,
   pageSize: number,
@@ -103,6 +104,22 @@ export const useSearchProducts = (
     {
       method: HTTPMethod.GET,
       params,
+    },
+    { revalidateOnFocus: false },
+  );
+};
+
+export const useRoles = (): responseInterface<
+  {
+    status: number;
+    data: IRole[];
+  },
+  Error
+> => {
+  return useRequest(
+    () => `/api/manage/role/list`,
+    {
+      method: HTTPMethod.GET,
     },
     { revalidateOnFocus: false },
   );

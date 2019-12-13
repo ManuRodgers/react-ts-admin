@@ -12,7 +12,7 @@ interface ILeftNavProps extends IUmiComponent {}
 
 const LeftNav: React.FunctionComponent<ILeftNavProps> = ({ location, dispatch }) => {
   let pathname = location.pathname;
-  console.log(`pathname`, pathname);
+
   if (pathname.startsWith(`/admin/product`)) {
     pathname = `/admin/product`;
   }
