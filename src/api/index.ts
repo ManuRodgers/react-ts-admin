@@ -12,6 +12,8 @@ import { AddProductDto } from '@/dto/add-product.dto';
 import { UpdateProductDto } from '@/dto/update-product.dto';
 import { DeleteProductDto } from '@/dto/delete-product.dto';
 import { UpdateProductStatusDto } from '@/dto/update-product-status.dto';
+import { AddRoleDto } from '@/dto/add-role.dto';
+import { UpdateRoleDto } from '@/dto/update-role.dto';
 
 const BASE = '';
 
@@ -73,4 +75,14 @@ export const deleteImg = (deleteImgDto: DeleteImgDto) =>
   request(BASE + '/api/manage/img/delete', {
     method: HTTPMethod.DELETE,
     data: deleteImgDto,
+  });
+
+// role
+export const addRole = (addRoleDto: AddRoleDto) =>
+  request(BASE + '/api/manage/role/add', { method: HTTPMethod.POST, data: addRoleDto });
+
+export const updateRole = (updateRoleDto: UpdateRoleDto) =>
+  request(BASE + '/api/manage/role/update', {
+    method: HTTPMethod.PUT,
+    data: updateRoleDto,
   });
