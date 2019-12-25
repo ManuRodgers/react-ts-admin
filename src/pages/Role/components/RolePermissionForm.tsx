@@ -15,6 +15,14 @@ const RolePermissionForm: React.FunctionComponent<IRolePermissionFormProps> = ({
   getCheckedKeys,
 }) => {
   const [checkedKeys, setCheckedKeys] = useState<string[]>(currentRole ? currentRole.menus : []);
+  console.log(`checkedKeys`, checkedKeys);
+  console.log(`currentRole`, currentRole);
+  useEffect(() => {
+    if (currentRole) {
+      currentRole.menus = checkedKeys;
+    }
+  }, [currentRole, checkedKeys]);
+
   useEffect(() => {
     getCheckedKeys(checkedKeys);
   }, [checkedKeys, getCheckedKeys]);
@@ -46,7 +54,7 @@ const RolePermissionForm: React.FunctionComponent<IRolePermissionFormProps> = ({
           onCheck={checkedKeys => {
             setCheckedKeys(checkedKeys as string[]);
           }}
-          checkedKeys={checkedKeys}
+          checkedKeys={currentRole && currentRole.menus.length > 0 ? currentRole.menus : []}
           checkable={true}
           defaultExpandAll={true}
         >

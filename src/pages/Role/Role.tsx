@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnProps } from 'antd/es/table';
 import { Table, Button, Card, Modal, message } from 'antd';
 import { connect } from 'react-redux';
@@ -10,6 +10,8 @@ import AddRoleForm from '@/pages/Role/components/AddRoleForm';
 import { useRoles } from '@/hooks';
 import RolePermissionForm from '@/pages/Role/components/RolePermissionForm';
 import { UpdateRoleDto } from '@/dto/update-role.dto';
+import memoryUtils from '@/utils/memoryUtils';
+import dayjs from 'dayjs';
 const mapStateToProps = ({ role }: IGlobalState) => ({
   role,
 });
@@ -36,6 +38,16 @@ const Role: React.FunctionComponent<IRoleProps> = ({ role, dispatch }) => {
       dispatch(setRoles({ roles: rolesData.data }));
     }
   }, [rolesData, rolesError, dispatch]);
+
+  const modifiedRoles = useMemo(() => {
+    return roles.map(role => {
+      return {
+        ...role,
+        create_time: dayjs(role.create_time).format('YYYY-MM-DD HH:mm:ss'),
+        auth_time: dayjs(role.auth_time).format('YYYY-MM-DD HH:mm:ss'),
+      };
+    });
+  }, [roles]);
 
   const columns: ColumnProps<IRole>[] = [
     {
@@ -99,8 +111,17 @@ const Role: React.FunctionComponent<IRoleProps> = ({ role, dispatch }) => {
   const handleSetRolePermissionOk: React.MouseEventHandler<HTMLElement> = useCallback(() => {
     console.log(`currentRole`, currentRole);
     console.log(`checkedKeys`, checkedKeys);
+    if (currentRole) {
+      // @ts-ignore
+      currentRole.auth_name = memoryUtils.user.username;
+    }
     dispatch(
-      updateRoleAsync({ updateRoleDto: { ...currentRole, menus: checkedKeys } as UpdateRoleDto }),
+      updateRoleAsync({
+        updateRoleDto: {
+          ...currentRole,
+          menus: checkedKeys,
+        } as UpdateRoleDto,
+      }),
     );
     setIsSetRolePermissionModalVisible(false);
   }, [currentRole, checkedKeys, dispatch]);

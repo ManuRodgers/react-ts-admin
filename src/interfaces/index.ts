@@ -1,6 +1,5 @@
 import { Dispatch } from 'dva';
 import { RouterTypes } from 'umi';
-import { ProductStatus } from '@/enums';
 
 export interface IUmiComponent extends RouterTypes<{}, { id: string }> {
   dispatch: Dispatch;
@@ -10,6 +9,11 @@ export interface IGlobalState {
   category: ICategoryModel;
   product: IProductModel;
   role: IRoleModel;
+  user: IUserModel;
+}
+
+export interface IRoleIdName {
+  [roleId: string]: string;
 }
 
 export interface ICategoryModel {
@@ -28,13 +32,17 @@ export interface IRoleModel {
   currentRole?: IRole;
 }
 
+export interface IUserModel {
+  users: IUser[];
+  currentUser?: IUser;
+}
+
 export interface IUser {
   _id: string;
   username: string;
-  password: string;
   phone: string;
   email: string;
-  create_time: number;
+  create_time: string;
   role_id: string;
 }
 
@@ -58,8 +66,8 @@ export interface IProduct {
 export interface IRole {
   name: string;
   auth_name: string;
-  auth_time: number;
-  create_time: number;
+  auth_time: number | string;
+  create_time: number | string;
   menus: string[];
   _id?: string;
   __v?: number;
