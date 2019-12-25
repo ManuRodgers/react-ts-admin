@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import request, { RequestOptionsInit } from 'umi-request';
 import useSWR, { ConfigInterface, keyInterface, responseInterface } from 'swr';
-import {ICategory, IProduct, IRole} from '@/interfaces';
+import { ICategory, IProduct, IRole, IUser } from '@/interfaces';
 import { HTTPMethod } from 'http-method-enum';
 import { SearchTypes } from '@/enums';
 export const usePrevious = <T extends {}>(value: T) => {
@@ -118,6 +118,21 @@ export const useRoles = (): responseInterface<
 > => {
   return useRequest(
     () => `/api/manage/role/list`,
+    {
+      method: HTTPMethod.GET,
+    },
+    { revalidateOnFocus: false },
+  );
+};
+export const useUsers = (): responseInterface<
+  {
+    status: number;
+    data: IUser[];
+  },
+  Error
+> => {
+  return useRequest(
+    () => `/api/manage/user/list`,
     {
       method: HTTPMethod.GET,
     },

@@ -14,6 +14,7 @@ import { DeleteProductDto } from '@/dto/delete-product.dto';
 import { UpdateProductStatusDto } from '@/dto/update-product-status.dto';
 import { AddRoleDto } from '@/dto/add-role.dto';
 import { UpdateRoleDto } from '@/dto/update-role.dto';
+import { DeleteUserDto } from '@/dto/delete-user.dto';
 
 const BASE = '';
 
@@ -31,8 +32,11 @@ export const reqLogin = (loginDto: LoginDto) => {
   });
 };
 
-export const reqAddUser = (user: AddUserDto) =>
-  request(BASE + '/api/manage/user/add', { method: HTTPMethod.POST, data: user });
+export const addUser = (addUserDto: AddUserDto) =>
+  request(BASE + '/api/manage/user/add', { method: HTTPMethod.POST, data: addUserDto });
+
+export const deleteUser = (deleteUserDto: DeleteUserDto) =>
+  request(BASE + '/api/manage/user/delete', { method: HTTPMethod.DELETE, data: deleteUserDto });
 
 // category
 export const addCategory = (addCategoryDto: AddCategoryDto) =>

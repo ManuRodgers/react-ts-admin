@@ -9,7 +9,6 @@ import {
   updateRoleAsync,
 } from '@/actions/roleActions';
 import { message } from 'antd';
-import { router } from 'umi';
 import { addRole, updateRole } from '@/api';
 
 const initState: IGlobalState['role'] = {
@@ -27,7 +26,7 @@ const roleBuilder = new DvaModelBuilder(initState, 'role')
     ...state,
     roles: state.roles.map(item => {
       if (item._id === role._id) {
-        return { ...item, menus: role.menus };
+        return { ...item, menus: role.menus, auth_name: role.auth_name, auth_time: role.auth_time };
       }
       return item;
     }),
@@ -44,7 +43,6 @@ const roleBuilder = new DvaModelBuilder(initState, 'role')
       return yield message.error(res.msg);
     }
   })
-  // TODO:
   .takeEvery(updateRoleAsync, function*({ updateRoleDto }, { select, put }) {
     console.log(`updateProductDto`, updateRoleDto);
     const res = yield updateRole(updateRoleDto);
