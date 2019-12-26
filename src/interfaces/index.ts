@@ -34,7 +34,7 @@ export interface IRoleModel {
 
 export interface IUserModel {
   users: IUser[];
-  currentUser?: IUser;
+  currentUser: IUser;
 }
 
 export interface IUser {
@@ -44,6 +44,7 @@ export interface IUser {
   email: string;
   create_time: string;
   role_id: string;
+  role?: IRole;
 }
 
 export interface ICategory {

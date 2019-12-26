@@ -10,7 +10,13 @@ import LinkButton from '@/components/LinkButton/LinkButton';
 import UserForm from '@/pages/User/components/UserForm';
 import { useRoles, useUsers } from '@/hooks';
 import { setRoles } from '@/actions/roleActions';
-import { addUserAsync, deleteUserAsync, setUsers } from '@/actions/userActions';
+import {
+  addUserAsync,
+  updateUserAsync,
+  deleteUserAsync,
+  setCurrentUser,
+  setUsers,
+} from '@/actions/userActions';
 
 const mapStateToProps = ({ user, role }: IGlobalState) => ({
   user,
@@ -21,6 +27,8 @@ interface IUserProps extends IUmiComponent, UserStateProps {}
 
 const User: React.FunctionComponent<IUserProps> = ({ user, dispatch, role }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isUpdatingUser, setIsUpdatingUser] = useState<boolean>(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
   const [userForm, setUserForm] = useState();
   console.log(`userForm`, userForm);
   const { users, currentUser } = user;
@@ -85,16 +93,20 @@ const User: React.FunctionComponent<IUserProps> = ({ user, dispatch, role }) => 
             <LinkButton
               onClick={() => {
                 console.log(`update clicked`);
+                setIsModalVisible(true);
+                setIsUpdatingUser(true);
+                dispatch(setCurrentUser({ currentUser: user }));
               }}
             >
               Update
             </LinkButton>
             <LinkButton
               onClick={() => {
-                dispatch(deleteUserAsync({ deleteUserDto: { userId: user._id } }));
+                setIsDeleteModalVisible(true);
+                dispatch(setCurrentUser({ currentUser: user }));
               }}
             >
-              remove
+              Remove
             </LinkButton>
           </span>
         );
@@ -105,27 +117,59 @@ const User: React.FunctionComponent<IUserProps> = ({ user, dispatch, role }) => 
     <Button
       onClick={() => {
         setIsModalVisible(true);
+        dispatch(setCurrentUser({ currentUser: {} as IUser }));
       }}
       type={'primary'}
     >
       Add User
     </Button>
   );
+  // add modal
   const handleModelOk = useCallback(() => {
     console.log(`handleModelOk`);
     const { resetFields, validateFields } = userForm;
-    validateFields((err: any, user: any) => {
-      if (!err) {
-        dispatch(addUserAsync({ addUserDto: user }));
-        console.log(`user`, user);
-        resetFields();
-        setIsModalVisible(false);
-      }
-    });
-  }, [userForm, dispatch]);
+
+    if (isUpdatingUser) {
+      // for update user
+      setIsUpdatingUser(false);
+      validateFields((err: any, user: any) => {
+        if (!err) {
+          dispatch(updateUserAsync({ updateUserDto: { ...user, _id: currentUser._id } }));
+          resetFields();
+          setIsModalVisible(false);
+        }
+      });
+    } else {
+      //  for add user
+      validateFields((err: any, user: any) => {
+        if (!err) {
+          dispatch(addUserAsync({ addUserDto: user }));
+          console.log(`user`, user);
+          resetFields();
+          setIsModalVisible(false);
+        }
+      });
+      console.log(`isUpdatingUser`, isUpdatingUser);
+    }
+  }, [userForm, dispatch, isUpdatingUser, currentUser]);
 
   const handleModelCancel = useCallback(() => {
     setIsModalVisible(false);
+    if (isUpdatingUser) {
+      setIsUpdatingUser(false);
+    }
+  }, [isUpdatingUser]);
+
+  // delete modal
+  const handleDeleteModelOk = useCallback(() => {
+    if (currentUser) {
+      dispatch(deleteUserAsync({ deleteUserDto: { userId: currentUser._id } }));
+      setIsDeleteModalVisible(false);
+    }
+  }, [dispatch, currentUser]);
+
+  const handleDeleteModelCancel = useCallback(() => {
+    setIsDeleteModalVisible(false);
   }, []);
   return (
     <Card title={title} className={`role`}>
@@ -140,7 +184,7 @@ const User: React.FunctionComponent<IUserProps> = ({ user, dispatch, role }) => 
         }}
       />
       <Modal
-        title="Add User"
+        title={isUpdatingUser ? 'Update User' : 'Add User'}
         visible={isModalVisible}
         onOk={handleModelOk}
         onCancel={handleModelCancel}
@@ -150,7 +194,17 @@ const User: React.FunctionComponent<IUserProps> = ({ user, dispatch, role }) => 
             setUserForm(form);
           }}
           roles={roles}
+          currentUser={currentUser}
         />
+      </Modal>
+      <Modal
+        title="Delete User"
+        visible={isDeleteModalVisible}
+        onOk={handleDeleteModelOk}
+        onCancel={handleDeleteModelCancel}
+      >
+        Are you sure you want to delete{` `}
+        <span style={{ color: '#f00' }}>{currentUser && currentUser.username}</span>?
       </Modal>
     </Card>
   );
