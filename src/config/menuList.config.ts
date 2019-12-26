@@ -65,3 +65,10 @@ export const menuList = [
 ];
 
 export type MenuList = typeof menuList;
+export interface IMenu {
+  title: string;
+  key: string;
+  icon: string;
+  isPublic?: boolean;
+  children?: IMenu[];
+}

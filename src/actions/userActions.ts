@@ -2,6 +2,7 @@ import { actionCreatorFactory } from 'dva-model-creator';
 import { IUser } from '@/interfaces';
 import { AddUserDto } from '@/dto/add-user.dto';
 import { DeleteUserDto } from '@/dto/delete-user.dto';
+import {UpdateUserDto} from "@/dto/update-user.dto";
 
 const userActionCreator = actionCreatorFactory('user');
 
@@ -12,6 +13,10 @@ export const setCurrentUser = userActionCreator<{ currentUser: IUser }>('setCurr
 // add user
 export const addUserSync = userActionCreator<{ user: IUser }>('addUserSync');
 export const addUserAsync = userActionCreator<{ addUserDto: AddUserDto }>('addUserAsync');
+
+// update user
+export const updateUserSync = userActionCreator<{ user: IUser }>('updateUserSync');
+export const updateUserAsync = userActionCreator<{ updateUserDto: UpdateUserDto }>('updateUserAsync');
 
 // delete user
 export const deleteUserSync = userActionCreator<{ userId: string }>('deleteUserSync');

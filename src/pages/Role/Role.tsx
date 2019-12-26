@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ColumnProps } from 'antd/es/table';
 import { Table, Button, Card, Modal, message } from 'antd';
 import { connect } from 'react-redux';
-import { IGlobalState, IRole, IUmiComponent } from '@/interfaces';
+import { IGlobalState, IRole, IUmiComponent, IUser } from '@/interfaces';
 import { PAGE_SIZE } from '@/utils/constant';
 import './Role.less';
 import { addRoleAsync, setCurrentRole, setRoles, updateRoleAsync } from '@/actions/roleActions';
@@ -150,7 +150,7 @@ const Role: React.FunctionComponent<IRoleProps> = ({ role, dispatch }) => {
         }}
         bordered={true}
         rowKey={'_id'}
-        dataSource={roles}
+        dataSource={modifiedRoles}
         columns={columns}
         pagination={{
           defaultPageSize: PAGE_SIZE,

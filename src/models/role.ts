@@ -1,5 +1,6 @@
 import { DvaModelBuilder } from 'dva-model-creator';
-import { IGlobalState, IRole } from '@/interfaces';
+import { router } from 'umi';
+import { IGlobalState, IRole, IUser } from '@/interfaces';
 import {
   setCurrentRole,
   setRoles,
@@ -10,6 +11,8 @@ import {
 } from '@/actions/roleActions';
 import { message } from 'antd';
 import { addRole, updateRole } from '@/api';
+import memoryUtils from '@/utils/memoryUtils';
+import storageUtils from '@/utils/storageUtils';
 
 const initState: IGlobalState['role'] = {
   roles: [],
@@ -48,10 +51,23 @@ const roleBuilder = new DvaModelBuilder(initState, 'role')
     const res = yield updateRole(updateRoleDto);
     yield console.log(`res`, res);
     if (res.status === 0) {
-      message.success(`update role permission successfully`);
       console.log(`res.data`, res.data);
+      const role = res.data as IRole;
+      // to see whether the current user is logged in
+      const currentUser = memoryUtils.user as IUser;
+      if (currentUser.role_id === role._id) {
+        console.log(`currentUser.role_id === role._id`);
+        yield put(updateRoleSync({ role }));
+        message.info(`Current role permission has been changed, Please login again`);
+        storageUtils.removeUser();
+        memoryUtils.user = {};
+        return router.push('/login');
+      } else {
+        console.log(`different role`);
+        message.success(`update role permission successfully`);
+        return yield put(updateRoleSync({ role }));
+      }
       // router.push(`/admin/product`);
-      return yield put(updateRoleSync({ role: res.data }));
     } else {
       return yield message.error(res.msg);
     }
