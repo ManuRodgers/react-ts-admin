@@ -203,6 +203,7 @@ const ProductHome: React.FunctionComponent<IProductHomeProps> = ({
         dataSource={products}
         columns={columns}
         pagination={{
+          current: pageNum,
           defaultPageSize: PAGE_SIZE,
           showQuickJumper: true,
           total,
